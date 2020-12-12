@@ -5,7 +5,9 @@
      "local_uri":"mysql+mysqlconnector://root:@localhost/mrpnhblog",
      "prod_uri":"mysql+mysqlconnector://root:@localhost/mrpnhblog",
      "insta_url":"https://www.instagram.com/following_only.you/",
-     "github_url":"https://github.com/Mrpnh"
-
+     "github_url":"https://github.com/Mrpnh",
+     "no_of_posts": 3,
+     "admin": "mrpnh",
+     "password": "mrpnhblogpassword"
     }
 }

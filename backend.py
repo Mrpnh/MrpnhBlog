@@ -12,7 +12,7 @@ Packages needed for backend:
 
 
 # imports
-from flask import Flask,render_template,request
+from flask import Flask,render_template,request,session
 from flask_sqlalchemy import SQLAlchemy # orm(object relational mapping)
 from datetime import datetime
 import json
@@ -22,6 +22,7 @@ with open("config.json","r") as f:
     params=json.load(f)["params"] 
 local_server=True
 app = Flask(__name__)
+app.secret_key = 'super-secret-key'
 if local_server==True:
     app.config['SQLALCHEMY_DATABASE_URI']=params["local_uri"]
 else:
@@ -58,8 +59,23 @@ class Posts(db.Model):
 
 @app.route("/")
 def home():
-    return render_template('index.html',params=params)
+    posts=Posts.query.filter_by().all()[0:params["no_of_posts"]]
+    return render_template('index.html',params=params,posts=posts)
 
+@app.route("/dashboard",methods=["GET","POST"])
+def dashboard():
+    posts=Posts.query.filter_by().all()
+    if 'user' in session and session['user']==params['admin']:
+        return render_template('dashboard.html',params=params,posts=posts)
+
+    if request.method=='POST':
+        username=request.form.get("uname")
+        password=request.form.get("pass")
+        if username==params["admin"] and password==params["password"]:
+            session['user'] = username
+            return render_template('dashboard.html',params=params,posts=posts)
+    
+    return render_template('login.html',params=params)
 
 @app.route("/about")
 def about():
